@@ -1,15 +1,14 @@
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js"
+import User from "../models/User.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || 'taski_secret_2024';
 
-// Registeration.
-
-export const register =  async (req, res) => {
+// Register
+export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    if (!name || !email || !password) return res.status(400).json({ message: 'All fields required' });
+    if (!name || !email || !password)
+      return res.status(400).json({ message: 'All fields required' });
 
     const exists = await User.findOne({ email });
     if (exists) return res.status(409).json({ message: 'Email already registered' });
@@ -27,8 +26,7 @@ export const register =  async (req, res) => {
 };
 
 // Login
-
-export const login=  async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -46,37 +44,48 @@ export const login=  async (req, res) => {
   }
 };
 
-// Seed means we are creating adming and a demo user.
+// Get my profile
+export const getMe = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select('-password');
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Seed — User.create use karo (model ka pre-save hook password hash karega)
 export const seedDb = async (req, res) => {
   try {
-    // Admin user
-    const adminExists = await User.findOne({ email: 'uzaif123@gmail.com' });
-    if (!adminExists) {
-      const hashed = await bcrypt.hash('admin123', 12);
-      await User.create({
-        name: 'Uzaif',
-        email: 'uzaif123@gmail.com',
-        password: hashed,
-        role: 'admin',
-        wallet: { balance: 0, transactions: [] }
-      });
-    } else if (adminExists.role !== 'admin') {
-      adminExists.role = 'admin';
-      await adminExists.save();
-    }
+    // Pehle delete karo existing users
+    await User.deleteMany({ 
+      email: { $in: ['uzaif123@gmail.com', 'aamish123@gmail.com'] } 
+    });
 
-    // Demo user
-    const userExists = await User.findOne({ email: 'aamish123@gmail.com' });
-    if (!userExists) {
-      const hashed = await bcrypt.hash('password123', 12);
-      await User.create({
-        name: 'Aamish',
-        email: 'aamish123@gmail.com',
-        password: hashed,
-        role: 'user',
-        wallet: { balance: 100000, transactions: [{ type: 'credit', amount: 100000, description: 'Welcome bonus' }] }
-      });
-    }
+    // Admin — plain password do, model khud hash karega
+    await User.create({
+      name: 'Uzaif',
+      email: 'uzaif123@gmail.com',
+      password: 'admin123',
+      role: 'admin',
+      wallet: { balance: 0, transactions: [] }
+    });
+
+    // Demo user — plain password do, model khud hash karega
+    await User.create({
+      name: 'Aamish',
+      email: 'aamish123@gmail.com',
+      password: 'password123',
+      role: 'user',
+      wallet: { 
+        balance: 100000, 
+        transactions: [{ 
+          type: 'credit', 
+          amount: 100000, 
+          description: 'Welcome bonus' 
+        }] 
+      }
+    });
 
     res.json({
       message: 'Seeded successfully!',
@@ -87,8 +96,3 @@ export const seedDb = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-
-
-
-
