@@ -1,42 +1,59 @@
 import express from "express";
 import { protect } from "./middleware/auth.js";
-import authRouter from "./routers/authRouter.js"
+import authRouter from "./routers/authRouter.js";
 import walletRouter from "./routers/walletRouter.js";
-import eventRouter from "./routers/eventRouter.js"
-import bookingRouter from "./routers/bookingRouter.js"
+import eventRouter from "./routers/eventRouter.js";
+import bookingRouter from "./routers/bookingRouter.js";
 import adminRouter from "./routers/adminRouter.js";
 import cors from "cors";
 import dotenv from "dotenv";
 
-const app = express();
- 
 dotenv.config();
 
-// Adds headers: Access-Control-Allow-Origin: *
-app.use(cors());
+const app = express();
 
-//built-in middleware for taking the request payload from user and store it into body;
+// CORS - allowing all the plateform to access
+app.use(cors({
+  origin: function (origin, callback) {
+    if (
+      !origin ||
+      origin === 'http://localhost:3000' ||
+      origin === 'http://localhost:5173' ||
+      origin.endsWith('.vercel.app') ||
+      origin.endsWith('.netlify.app')
+    ) {
+      callback(null, true);
+    } else {
+      callback(null, true); 
+    }
+  },
+  credentials: true,
+}));
+
+//built-in middleware
 app.use(express.json());
 
-
-
-// mounting the routers
-
+// Routes
 app.use('/api/auth', authRouter);
 app.use('/api/wallet', walletRouter);
 app.use('/api/events', eventRouter);
 app.use('/api/bookings', bookingRouter);
 app.use('/api/admin', adminRouter);
 
-app.get('/api/health', (req, res) => res.json({ status: 'OK', message: 'Taski API Running' }));
+// Health check
+app.get('/api/health', (req, res) =>
+  res.json({ status: 'OK', message: 'Taski API Running' })
+);
 
-// get own profile.
-
-
+// Get own profile
 app.get('/me', protect, async (req, res) => {
-  const user = await User.findById(req.user._id).select('-password');
-  res.json(user);
+  try {
+    const User = (await import('./models/User.js')).default;
+    const user = await User.findById(req.user._id).select('-password');
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
-
 
 export default app;
