@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import User from "./src/models/User.js"
 
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/taski-data'
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/taski-data'
 
  // configureing dotenv file.
 dotenv.config();
@@ -14,7 +14,7 @@ async function seed() {
 
   // connecting to mongodb.
 
-  await mongoose.connect(MONGO_URL)
+  await mongoose.connect(MONGO_URI)
   console.log('MongoDB connected')
 
   //  creating Admin user

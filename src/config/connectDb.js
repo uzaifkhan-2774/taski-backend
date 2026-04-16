@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-const MONGO_URL = process.env.MONGO_URL || 'mongodb://localhost:27017/taski-data';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/taski-data';
 
 const connectDB = async()=>{
    
-    await mongoose.connect(MONGO_URL)
+    await mongoose.connect(MONGO_URI)
     .then((res)=>{
         console.log("Db is connected successfully");
     })
