@@ -46,6 +46,48 @@ export const login=  async (req, res) => {
   }
 };
 
+// Seed means we are creating adming and a demo user.
+export const seedDb = async (req, res) => {
+  try {
+    // Admin user
+    const adminExists = await User.findOne({ email: 'uzaif123@gmail.com' });
+    if (!adminExists) {
+      const hashed = await bcrypt.hash('admin123', 12);
+      await User.create({
+        name: 'Uzaif',
+        email: 'uzaif123@gmail.com',
+        password: hashed,
+        role: 'admin',
+        wallet: { balance: 0, transactions: [] }
+      });
+    } else if (adminExists.role !== 'admin') {
+      adminExists.role = 'admin';
+      await adminExists.save();
+    }
+
+    // Demo user
+    const userExists = await User.findOne({ email: 'aamish123@gmail.com' });
+    if (!userExists) {
+      const hashed = await bcrypt.hash('password123', 12);
+      await User.create({
+        name: 'Aamish',
+        email: 'aamish123@gmail.com',
+        password: hashed,
+        role: 'user',
+        wallet: { balance: 100000, transactions: [{ type: 'credit', amount: 100000, description: 'Welcome bonus' }] }
+      });
+    }
+
+    res.json({
+      message: 'Seeded successfully!',
+      admin: 'uzaif123@gmail.com / admin123',
+      user: 'aamish123@gmail.com / password123'
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 
 
 

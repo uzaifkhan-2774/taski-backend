@@ -13,22 +13,7 @@ dotenv.config();
 const app = express();
 
 // CORS - allowing all the plateform to access
-app.use(cors({
-  origin: function (origin, callback) {
-    if (
-      !origin ||
-      origin === 'http://localhost:3000' ||
-      origin === 'http://localhost:5173' ||
-      origin.endsWith('.vercel.app') ||
-      origin.endsWith('.netlify.app')
-    ) {
-      callback(null, true);
-    } else {
-      callback(null, true); 
-    }
-  },
-  credentials: true,
-}));
+app.use(cors());
 
 //built-in middleware
 app.use(express.json());
