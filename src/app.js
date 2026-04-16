@@ -31,14 +31,14 @@ app.get('/api/health', (req, res) =>
 );
 
 // Get own profile
-app.get('/me', protect, async (req, res) => {
-  try {
-    const User = (await import('./models/User.js')).default;
-    const user = await User.findById(req.user._id).select('-password');
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
+// app.get('/me', protect, async (req, res) => {
+//   try {
+//     const User = (await import('./models/User.js')).default;
+//     const user = await User.findById(req.user._id).select('-password');
+//     res.json(user);
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// });
 
 export default app;
