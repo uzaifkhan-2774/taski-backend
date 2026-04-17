@@ -1,5 +1,5 @@
 import express from "express";
-import { protect } from "./middleware/auth.js";
+
 import authRouter from "./routers/authRouter.js";
 import walletRouter from "./routers/walletRouter.js";
 import eventRouter from "./routers/eventRouter.js";
@@ -13,7 +13,9 @@ dotenv.config();
 const app = express();
 
 // CORS - allowing all the plateform to access
-app.use(cors());
+app.use(cors({
+  origin :"https://taski-frontend-rust.vercel.app/"
+}));
 
 //built-in middleware
 app.use(express.json());
