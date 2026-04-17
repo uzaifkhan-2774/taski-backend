@@ -1,12 +1,12 @@
 import express from "express";
-
 import authRouter from "./routers/authRouter.js";
 import walletRouter from "./routers/walletRouter.js";
 import eventRouter from "./routers/eventRouter.js";
 import bookingRouter from "./routers/bookingRouter.js";
 import adminRouter from "./routers/adminRouter.js";
-import cors from "cors";
 import dotenv from "dotenv";
+import cors from "cors";
+
 
 dotenv.config();
 

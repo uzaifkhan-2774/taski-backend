@@ -1,9 +1,11 @@
 import app from "./app.js";
 import connectDb from "./config/connectDb.js";
 import { releaseExpiredReservations } from "./utils/scheduler.js";
-
+import dotenv from "dotenv";
 const PORT = process.env.PORT || 5000;
 
+ //configuring the .env
+ dotenv.config();
 // DB connect 
 connectDb();
 
