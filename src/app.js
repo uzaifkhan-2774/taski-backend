@@ -13,9 +13,7 @@ dotenv.config();
 const app = express();
 
 // CORS - allowing all the plateform to access
-app.use(cors({
-  origin :"https://taski-frontend-rust.vercel.app/"
-}));
+app.use(cors());
 
 //built-in middleware
 app.use(express.json());
