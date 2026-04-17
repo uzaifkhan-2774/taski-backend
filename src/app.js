@@ -4,11 +4,11 @@ import walletRouter from "./routers/walletRouter.js";
 import eventRouter from "./routers/eventRouter.js";
 import bookingRouter from "./routers/bookingRouter.js";
 import adminRouter from "./routers/adminRouter.js";
-import dotenv from "dotenv";
+
 import cors from "cors";
 
 
-dotenv.config();
+
 
 const app = express();
 
