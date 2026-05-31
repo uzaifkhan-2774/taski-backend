@@ -55,6 +55,7 @@ export const seatsCreation = async (req, res) => {
           seats.push({ seatNumber: `${row}${i}`, row, class: 'economy', price: req.body.price || 500000 });
         }
       }
+      
     }
 
     event.seats.push(...seats);
@@ -68,7 +69,7 @@ export const seatsCreation = async (req, res) => {
   }
 };
 
-// Get all events
+// Get all events or get all event
 export const getAllEvents = async (req, res) => {
   try {
     const events = await Event.find().sort({ createdAt: -1 });
